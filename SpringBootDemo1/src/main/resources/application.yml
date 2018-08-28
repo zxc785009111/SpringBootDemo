@@ -1,0 +1,96 @@
+server:
+  port: 8080
+  #端口号
+  servlet:
+    #项目前缀
+    context-path: /girl
+girl: 
+  cupSize: B
+  age: 18
+#如何在配置中再次使用配置
+content: "cpuSize:${girl.cupSize} , age:${girl.age}"
+#使用生产环境的配置文件
+spring:
+  datasource:
+        name: oracle_test
+        type: com.alibaba.druid.pool.DruidDataSource
+        #druid相关配置
+        druid:
+          #监控统计拦截的filters
+          filters: stat
+          driver-class-name: oracle.jdbc.OracleDriver
+          #基本属性
+          url: jdbc:oracle:thin:@localhost:1521:orcl
+          username: weblogic
+          password: password1
+          #配置初始化大小/最小/最大
+          initial-size: 1
+          min-idle: 1
+          max-active: 20
+          #获取连接等待超时时间
+          max-wait: 60000
+          #间隔多久进行一次检测，检测需要关闭的空闲连接
+          time-between-eviction-runs-millis: 60000
+          #一个连接在池中最小生存的时间
+          min-evictable-idle-time-millis: 300000
+          validation-query: SELECT 'x' FROM DUAL
+          test-while-idle: true
+          test-on-borrow: false
+          test-on-return: false
+          #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+          pool-prepared-statements: true
+          max-pool-prepared-statement-per-connection-size: 20
+  #Redis连接配置
+  redis:
+    host: localhost
+    password: password1
+    timeout:
+      10000
+    database: 0
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait:
+          -1
+        max-idle: 8
+        min-idle: 0
+  swagger:
+    base-package: com.ithwua #Swagger会解析的包的路径
+    enabled: true #开启Swagger
+## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+## Mybatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.ithwua.entity  # 注意：对应实体类的路径
+  #驼峰命名规范 如：数据库字段是  order_id 那么 实体字段就要写成 orderId，
+  #这个配置是为我们简化ResultMap的配置
+  configuration:
+    map-underscore-to-camel-case: true
+
+##日志配置,这里只是写了显示日志，后面服务器需要可能需要记录日志可以参考battch的博客
+logging:
+  level:
+    #root: warn
+    #设置Mybatis打印Sql,下面的包是dao层的包路径，不是mapper的路径
+    com.ithwua.dao: DEBUG
+    #org: 
+      #hibernate: ERROR
+      #mybatis: INFO
+      #springframework:
+        #web: debug
+        
+##通用Mapper配置:
+mapper:
+  mappers:
+  - tk.mybatis.mapper.common.BaseMapper
+  not-empty: true #设置以后，会去判断 insert 和 update 中符串类型!=''
+  #枚举按简单类型处理(如果有枚举字段则需要加上该配置才会做映射)
+  enum-as-simple-type: true
+  
+########## 分页插件 #########
+pagehelper:
+  helper-dialect: oracle
+  params: countsql
+  #分页合理化参数，默认值为false。当该参数设置为 true 时，pageNum<=0 时会查询第一页， 
+  #pageNum>pages（超过总数时），会查询最后一页。默认false 时，直接根据参数进行查询
+  reasonable: false  

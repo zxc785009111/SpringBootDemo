@@ -1,0 +1,11 @@
+server:
+  port: 8081
+  #端口号
+  servlet:
+    #项目前缀
+    context-path: /girl
+girl: 
+  cupSize: B
+  age: 18
+#如何在配置中再次使用配置
+content: "cpuSize:${girl.cupSize} , age:${girl.age}"
