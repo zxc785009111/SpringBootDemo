@@ -108,7 +108,7 @@
         	<groupId>org.springframework.boot</groupId>
         	<artifactId>spring-boot-starter-web</artifactId>
     	</dependency>
-    <!-- shiro 相关包 -->
+    	<!-- shiro 相关包 -->
     	<dependency>
         	<groupId>org.apache.shiro</groupId>
         	<artifactId>shiro-core</artifactId>
@@ -119,12 +119,18 @@
         	<artifactId>shiro-spring</artifactId>
         	<version>${shiro.version}</version>
     	</dependency>
-    	<dependency>
+    	<!-- <dependency>
         	<groupId>org.apache.shiro</groupId>
         	<artifactId>shiro-ehcache</artifactId>
         	<version>${shiro.version}</version>
-    	</dependency>
-    <!-- End  -->
+    	</dependency> -->
+    	<!-- End  -->
+    	<!-- shiro+redis缓存插件 -->
+		<dependency>
+    		<groupId>org.crazycake</groupId>
+    		<artifactId>shiro-redis</artifactId>
+    		<version>2.4.2.1-RELEASE</version>
+		</dependency>
 		<!-- <dependency>
     		<groupId>com.ithwua</groupId>
     		<artifactId>swagger-spring-boot-starter</artifactId>
