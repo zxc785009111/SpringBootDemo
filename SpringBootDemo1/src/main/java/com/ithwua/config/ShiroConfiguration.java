@@ -10,8 +10,14 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.ithwua.service.IShiroService;
+import com.ithwua.service.ISysPermissionIninService;
+import com.ithwua.service.impl.ShiroServiceImpl;
+import com.ithwua.service.impl.SysPermissionInitServiceImpl;
 
 /**
  * shiro 主要配置信息
@@ -20,6 +26,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ShiroConfiguration {
+	@Autowired
+	ISysPermissionIninService sysPermissionIninService;
 	
 	private static final Logger log = LoggerFactory.getLogger(ShiroConfiguration.class);
 	/**
@@ -60,6 +68,14 @@ public class ShiroConfiguration {
 //    }
 	
 	
+	   
+	   /*@Bean
+		public ISysPermissionIninService getShiroServiceImpl() {
+			log.info("##################初始化ISysPermissionIninService######################");
+			ISysPermissionIninService ininService  = new SysPermissionInitServiceImpl();
+			return ininService;
+		}*/
+	
 	/**
      * ShiroFilter<br/>
      * 注意这里参数中的 StudentService 和 IScoreDao 只是一个例子，因为我们在这里可以用这样的方式获取到相关访问数据库的对象，
@@ -79,7 +95,7 @@ public class ShiroConfiguration {
         // 登录成功后要跳转的连接
         shiroFilterFactoryBean.setSuccessUrl("/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/denied");
-        loadShiroFilterChain(shiroFilterFactoryBean);
+        //loadShiroFilterChain(shiroFilterFactoryBean);
         return shiroFilterFactoryBean;
     }
     
@@ -98,16 +114,20 @@ public class ShiroConfiguration {
        filterChainDefinitionMap.put("/hello", "anon");
        // anon：它对应的过滤器里面是空的,什么都没做
        log.info("##################从数据库读取权限规则，加载到shiroFilter中##################");
-
+       //Map<String, String> shiroInitFilterInfo = sysPermissionIninService.getShiroInitFilterInfo();
        // 不用注解也可以通过 API 方式加载权限规则
        Map<String, String> permissions = new LinkedHashMap<>();
        permissions.put("/users/find", "perms[user:find]");
+       //filterChainDefinitionMap.putAll(shiroInitFilterInfo);
+       //Map<String, String> permissions = new LinkedHashMap<>();
+       //permissions.put("/users/find", "perms[user:find]");
        filterChainDefinitionMap.putAll(permissions);
        filterChainDefinitionMap.put("/**", "authc");
        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+       log.info("##################Filter加载完成##################");
    }
 	/**
-	 * 设置此类启动缓存
+	 * 自定义Realm
 	 * @param cacheManager
 	 * @return
 	 */
@@ -165,4 +185,5 @@ public class ShiroConfiguration {
    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
        return new DefaultAdvisorAutoProxyCreator();
    }
+
 }

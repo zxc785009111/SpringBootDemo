@@ -21,7 +21,7 @@ import org.springframework.util.SerializationUtils;
  */
 @Component
 public class ShiroRedisCache<K, V> implements Cache<K, V> {
-	@Resource
+	@Resource//这个注解是一定要加的，不然在下面的redisTemplate.opsForValue().get(bytes);会报错空指针异常		
 	private RedisTemplate redisTemplate;
 	private String prefix = "shiro_redis:";
 	private static final Logger log = LoggerFactory.getLogger(ShiroRedisCache.class);
